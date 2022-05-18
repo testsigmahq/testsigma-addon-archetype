@@ -47,7 +47,7 @@ To get more details about the Testsigma archetype, please visit below maven repo
 		-Dversion=1.0.0 \
 		-DarchetypeArtifactId=testsigma-addon-archetype \
 		-DarchetypeGroupId=com.testsigma \
-		-DarchetypeVersion=1.0.0.rc1 \
+		-DarchetypeVersion=1.0.1 \
 		-DinteractiveMode=false \
 		-Dtestsigma-sdk-api-key=sample
 ```

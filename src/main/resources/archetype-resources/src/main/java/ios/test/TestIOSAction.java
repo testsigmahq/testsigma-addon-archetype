@@ -33,7 +33,7 @@ public class TestIOSAction {
 
         capabilities.setCapability("app", "<IPA FILE PATH>");
 
-        IOSDriver<WebElement> driver = new IOSDriver<>(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
+        IOSDriver<WebElement> driver = new IOSDriver(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
         driver.launchApp();
         runner = new ActionRunner(driver); //Initialie Action runner

@@ -26,7 +26,7 @@ public class TestAndroidAction {
         caps.setCapability("deviceName", "<DEVICE_NAME>");
         caps.setCapability("udid", "<DEVICE_UDID>");
         caps.setCapability("platformName", "android");
-        driver = new AndroidDriver<>(new URL("http://localhost:4723/wd/hub"), caps);
+        driver = new AndroidDriver(new URL("http://localhost:4723/wd/hub"), caps);
         driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
         driver.launchApp();
         runner = new ActionRunner(driver); //Initialie Action runner

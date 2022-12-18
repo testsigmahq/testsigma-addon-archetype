@@ -34,11 +34,12 @@ dependencies {
     implementation 'org.apache.maven.plugins:maven-toolchains-plugin:3.0.0'
     implementation 'org.testng:testng:7.4.0'
     implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
 
 group = 'com.testsigma'
-version = '1.0.7'
+version = '1.0.8'
 description = 'testsigma-addon-archetype'
 java.sourceCompatibility = JavaVersion.VERSION_11
 

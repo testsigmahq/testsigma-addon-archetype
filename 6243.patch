@@ -1,0 +1,43 @@
+diff --git a/build.gradle b/build.gradle
+index cd0eae1..f8718aa 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -34,11 +34,12 @@ dependencies {
+     implementation 'org.apache.maven.plugins:maven-toolchains-plugin:3.0.0'
+     implementation 'org.testng:testng:7.4.0'
+     implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
++    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.0'
+     annotationProcessor 'org.projectlombok:lombok:1.18.20'
+ }
+ 
+ group = 'com.testsigma'
+-version = '1.0.7'
++version = '1.0.8'
+ description = 'testsigma-addon-archetype'
+ java.sourceCompatibility = JavaVersion.VERSION_11
+ 
+diff --git a/src/main/resources/archetype-resources/pom.xml b/src/main/resources/archetype-resources/pom.xml
+index 4370e7f..e9a1a8d 100644
+--- a/src/main/resources/archetype-resources/pom.xml
++++ b/src/main/resources/archetype-resources/pom.xml
+@@ -13,7 +13,7 @@
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+         <maven.compiler.source>11</maven.compiler.source>
+         <maven.compiler.target>11</maven.compiler.target>
+-        <testsigma.sdk.version>1.0.7</testsigma.sdk.version>
++        <testsigma.sdk.version>1.0.8</testsigma.sdk.version>
+         <junit.jupiter.version>5.8.0-M1</junit.jupiter.version>
+         <testsigma.addon.maven.plugin>1.0.0</testsigma.addon.maven.plugin>
+         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
+@@ -56,6 +56,11 @@
+             <artifactId>java-client</artifactId>
+             <version>7.0.0</version>
+         </dependency>
++        <dependency>
++            <groupId>com.fasterxml.jackson.core</groupId>
++            <artifactId>jackson-annotations</artifactId>
++            <version>2.13.0</version>
++        </dependency>
+ 
+     </dependencies>
+     <build>

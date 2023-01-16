@@ -39,7 +39,7 @@ dependencies {
 }
 
 group = 'com.testsigma'
-version = '1.0.9'
+version = '1.0.9_beta'
 description = 'testsigma-addon-archetype'
 java.sourceCompatibility = JavaVersion.VERSION_11
 

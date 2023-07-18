@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.20.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.25.3'
     }
 }
 
@@ -15,7 +15,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
-    id 'com.vanniktech.maven.publish' version '0.20.0'
+    id 'com.vanniktech.maven.publish' version '0.25.3'
 }
 
 repositories {

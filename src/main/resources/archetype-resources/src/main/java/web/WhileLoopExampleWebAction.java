@@ -13,7 +13,8 @@ import org.openqa.selenium.NoSuchElementException;
 @Action(actionText = "while values-count selectable-list values-count2",
         description = "While loop example for 2 values comparison",
         applicationType = ApplicationType.WEB,
-        actionType = StepActionType.WHILE_LOOP)
+        actionType = StepActionType.WHILE_LOOP,
+        useCustomScreenshot = false )
 public class WhileLoopExampleWebAction extends WebAction {
 
     @TestData(reference = "values-count")

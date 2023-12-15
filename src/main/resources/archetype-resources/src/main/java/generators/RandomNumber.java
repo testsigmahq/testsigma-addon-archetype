@@ -8,7 +8,8 @@ import lombok.Data;
 
 @Data
 @com.testsigma.sdk.annotation.TestDataFunction(displayName = "Generate random number with min and max",
-        description = "Generates Random Number within range")
+        description = "Generates Random Number within range",
+        useCustomScreenshot = false)
 public class RandomNumber extends TestDataFunction {
 
   @TestDataFunctionParameter (reference = "min")

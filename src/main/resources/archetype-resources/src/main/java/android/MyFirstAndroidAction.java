@@ -9,7 +9,9 @@ import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-@Action(actionText = "Enter test-data in element element-locator if visible", applicationType = ApplicationType.ANDROID)
+@Action(actionText = "Enter test-data in element element-locator if visible",
+        applicationType = ApplicationType.ANDROID,
+        useCustomScreenshot = false)
 public class MyFirstAndroidAction extends AndroidAction {
 
   @TestData(reference = "test-data")

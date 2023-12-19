@@ -15,7 +15,8 @@ import org.openqa.selenium.WebElement;
 @Action(actionText = "count of elements identified by count-element is selectable-list test data",
         description = "Conditional If example for value comparison",
         applicationType = ApplicationType.WEB,
-        actionType = StepActionType.IF_CONDITION)
+        actionType = StepActionType.IF_CONDITION,
+        useCustomScreenshot = false)
 public class ConditionalIFExampleWebAction extends WebAction {
 
     @Element(reference = "count-element")

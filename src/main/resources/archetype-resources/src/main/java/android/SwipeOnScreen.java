@@ -15,7 +15,9 @@ import org.openqa.selenium.WebElement;
 import java.time.Duration;
 
 @Data
-@Action(actionText = "Swipe on screen from source-coordinates to target-coordinates", applicationType = ApplicationType.ANDROID)
+@Action(actionText = "Swipe on screen from source-coordinates to target-coordinates",
+        applicationType = ApplicationType.ANDROID,
+        useCustomScreenshot = false)
 public class SwipeOnScreen extends AndroidAction {
 
     @TestData(reference = "source-coordinates")

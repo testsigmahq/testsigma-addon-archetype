@@ -28,16 +28,26 @@ public class WhileLoopExampleWebAction extends WebAction {
     public com.testsigma.sdk.Result execute() throws NoSuchElementException {
         Result result = Result.SUCCESS;
         logger.info("Initiating execution");
+        boolean isNumericData = testData1.getValue().toString().matches("^[0-9]+([.][0-9]+)?$")
+                && testData2.getValue().toString().matches("^[0-9]+([.][0-9]+)?$");
         switch (testData3.getValue().toString()) {
             case "less than":
-                if (testData1.getValue().toString().compareTo(testData2.getValue().toString()) < 0) {
+                if (isNumericData &&
+                        Double.parseDouble(testData1.getValue().toString()) < Double.parseDouble(testData2.getValue().toString())) {
+                    setSuccessMessage("Successfully executed step");
+                }
+                else if (!isNumericData && testData1.getValue().toString().compareTo(testData2.getValue().toString()) < 0) {
                     setSuccessMessage("Successfully executed step");
                 } else {
                     return Result.FAILED;
                 }
                 break;
             case "greater than":
-                if (testData1.getValue().toString().compareTo(testData2.getValue().toString()) > 0) {
+                if (isNumericData &&
+                        Double.parseDouble(testData1.getValue().toString()) > Double.parseDouble(testData2.getValue().toString())) {
+                    setSuccessMessage("Successfully executed step");
+                }
+                else if (!isNumericData && testData1.getValue().toString().compareTo(testData2.getValue().toString()) > 0) {
                     setSuccessMessage("Successfully executed step");
                 } else {
                     return Result.FAILED;

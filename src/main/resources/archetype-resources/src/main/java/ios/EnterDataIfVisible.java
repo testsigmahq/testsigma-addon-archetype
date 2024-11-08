@@ -12,7 +12,9 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 @Data
-@Action(actionText = "Enter test-data in element element-locator if visible", applicationType = ApplicationType.IOS)
+@Action(actionText = "Enter test-data in element element-locator if visible",
+        applicationType = ApplicationType.IOS,
+        useCustomScreenshot = false)
 public class EnterDataIfVisible extends IOSAction {
 
   @TestData(reference = "test-data")

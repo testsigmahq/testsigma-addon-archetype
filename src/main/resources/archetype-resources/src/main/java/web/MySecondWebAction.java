@@ -13,7 +13,8 @@ import org.openqa.selenium.WebElement;
 @Data
 @Action(actionText = "Store the text from element-locator in values-count variable",
         description = "Stores run time data",
-        applicationType = ApplicationType.WEB)
+        applicationType = ApplicationType.WEB,
+        useCustomScreenshot = false)
 public class MySecondWebAction extends WebAction {
 
   @TestData(reference = "values-count")

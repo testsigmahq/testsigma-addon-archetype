@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.20.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.25.3'
     }
 }
 
@@ -15,7 +15,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
-    id 'com.vanniktech.maven.publish' version '0.20.0'
+    id 'com.vanniktech.maven.publish' version '0.25.3'
 }
 
 repositories {
@@ -28,17 +28,18 @@ repositories {
 
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.20'
-    implementation 'org.seleniumhq.selenium:selenium-api:3.141.59'
-    implementation 'io.appium:java-client:7.0.0'
+    implementation 'org.seleniumhq.selenium:selenium-api:4.14.1'
+    implementation 'io.appium:java-client:9.0.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.maven.plugins:maven-toolchains-plugin:3.0.0'
     implementation 'org.testng:testng:7.4.0'
-    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.14.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
 
 group = 'com.testsigma'
-version = '1.0.5'
+version = '1.2.14_cloud'
 description = 'testsigma-addon-archetype'
 java.sourceCompatibility = JavaVersion.VERSION_11
 

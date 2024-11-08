@@ -1,21 +1,23 @@
 package ${package}.ios.test;
 
 
-import com.testsigma.sdk.TestData;
+import com.google.common.collect.ImmutableMap;
+import ${package}.ios.EnterDataIfVisible;
+
 import com.testsigma.sdk.Element;
+import com.testsigma.sdk.TestData;
 import com.testsigma.sdk.runners.ActionRunner;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.remote.MobileCapabilityType;
-import ${package}.ios.EnterDataIfVisible;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TestIOSAction {
@@ -24,20 +26,24 @@ public class TestIOSAction {
 
     @BeforeClass
     public void setup() throws Exception {
-        //Make sure to start Appium server
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "14");
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
-        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
-        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 11 Max");
+       // Make sure to start Appium server
+       DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("app", "<IPA FILE PATH>");
+       capabilities.setCapability("platformName", "iOS");
 
-        IOSDriver<WebElement> driver = new IOSDriver<>(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
-        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-        driver.launchApp();
-        runner = new ActionRunner(driver); //Initialie Action runner
+       Map<String, Object> appiumOptions = new HashMap<>();
+       appiumOptions.put("platformVersion", "14");
+       appiumOptions.put("automationName", "XCUITest");
+       appiumOptions.put("deviceName", "iPhone 11 Max");
+       appiumOptions.put("app", "<IPA FILE PATH>");
+       capabilities.setCapability("appium:options", appiumOptions);
 
+       IOSDriver driver = new IOSDriver(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
+       driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+       driver.executeScript("mobile: activateApp", ImmutableMap.of("bundleId",
+               driver.getCapabilities().getCapability("appium:bundleId")));
+
+       runner = new ActionRunner(driver); //Initialie Action runner
     }
 
     @Test

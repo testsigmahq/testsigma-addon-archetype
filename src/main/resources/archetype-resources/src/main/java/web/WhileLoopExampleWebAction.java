@@ -13,7 +13,8 @@ import org.openqa.selenium.NoSuchElementException;
 @Action(actionText = "while values-count selectable-list values-count2",
         description = "While loop example for 2 values comparison",
         applicationType = ApplicationType.WEB,
-        actionType = StepActionType.WHILE_LOOP)
+        actionType = StepActionType.WHILE_LOOP,
+        useCustomScreenshot = false )
 public class WhileLoopExampleWebAction extends WebAction {
 
     @TestData(reference = "values-count")
@@ -27,16 +28,26 @@ public class WhileLoopExampleWebAction extends WebAction {
     public com.testsigma.sdk.Result execute() throws NoSuchElementException {
         Result result = Result.SUCCESS;
         logger.info("Initiating execution");
+        boolean isNumericData = testData1.getValue().toString().matches("^[0-9]+([.][0-9]+)?$")
+                && testData2.getValue().toString().matches("^[0-9]+([.][0-9]+)?$");
         switch (testData3.getValue().toString()) {
             case "less than":
-                if (testData1.getValue().toString().compareTo(testData2.getValue().toString()) < 0) {
+                if (isNumericData &&
+                        Double.parseDouble(testData1.getValue().toString()) < Double.parseDouble(testData2.getValue().toString())) {
+                    setSuccessMessage("Successfully executed step");
+                }
+                else if (!isNumericData && testData1.getValue().toString().compareTo(testData2.getValue().toString()) < 0) {
                     setSuccessMessage("Successfully executed step");
                 } else {
                     return Result.FAILED;
                 }
                 break;
             case "greater than":
-                if (testData1.getValue().toString().compareTo(testData2.getValue().toString()) > 0) {
+                if (isNumericData &&
+                        Double.parseDouble(testData1.getValue().toString()) > Double.parseDouble(testData2.getValue().toString())) {
+                    setSuccessMessage("Successfully executed step");
+                }
+                else if (!isNumericData && testData1.getValue().toString().compareTo(testData2.getValue().toString()) > 0) {
                     setSuccessMessage("Successfully executed step");
                 } else {
                     return Result.FAILED;

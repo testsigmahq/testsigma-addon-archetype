@@ -33,7 +33,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.maven.plugins:maven-toolchains-plugin:3.0.0'
     implementation 'org.testng:testng:7.4.0'
-    implementation 'org.seleniumhq.selenium:selenium-java:4.14.1'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.33.0'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }

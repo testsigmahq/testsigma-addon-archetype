@@ -1,0 +1,140 @@
+name: Security Vulnerability Scan
+
+on:
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: '11'
+
+jobs:
+  grype-scan:
+    name: "Java/Gradle Vulnerability Scan"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'zulu'
+
+      # Collect all runtime dependency JARs into .dep-jars/ inside the workspace.
+      #
+      # A one-off Gradle init script copies the runtimeClasspath configuration
+      # directly — no cache-path guessing, works with any layout.
+      # Keeping JARs inside $GITHUB_WORKSPACE is critical: anchore/sbom-action
+      # mounts only the workspace into its container, so any path outside it
+      # is silently invisible to syft.
+      - name: Collect runtime dependency JARs
+        id: collect-deps
+        continue-on-error: true
+        run: |
+          mkdir -p .dep-jars
+          [ -f "gradlew" ] && chmod +x gradlew
+          GRADLEW=$([ -f "gradlew" ] && echo "./gradlew" || echo "gradle")
+
+          # Init script: copies runtimeClasspath (or nearest equivalent) for
+          # every subproject into .dep-jars/ without touching build.gradle.
+          # Written with printf to avoid the '<<' heredoc operator, which
+          # GitHub's YAML parser misreads as a merge key inside a block scalar.
+          printf '%s\n' \
+            'allprojects {' \
+            "  tasks.register('_copyDepsForScan') {" \
+            '    doLast {' \
+            "      def cfg = project.configurations.findByName('runtimeClasspath') ?:" \
+            "                project.configurations.findByName('runtime') ?:" \
+            "                project.configurations.findByName('compileClasspath')" \
+            '      if (cfg) {' \
+            "        def destDir = rootProject.file('.dep-jars')" \
+            '        destDir.mkdirs()' \
+            '        try {' \
+            '          cfg.resolvedConfiguration.lenientConfiguration.artifacts' \
+            '            .findAll { art ->' \
+            "              art.file.name.endsWith('.jar') &&" \
+            "              !art.file.name.endsWith('-sources.jar') &&" \
+            "              !art.file.name.endsWith('-javadoc.jar')" \
+            '            }' \
+            '            .each { art ->' \
+            '              def dest = new File(destDir, art.file.name)' \
+            '              java.nio.file.Files.copy(' \
+            '                art.file.toPath(),' \
+            '                dest.toPath(),' \
+            '                java.nio.file.StandardCopyOption.REPLACE_EXISTING' \
+            '              )' \
+            '            }' \
+            '        } catch (ignored) {}' \
+            '      }' \
+            '    }' \
+            '  }' \
+            '}' \
+            > /tmp/copy-deps.init.gradle
+
+          $GRADLEW --no-daemon \
+            --init-script /tmp/copy-deps.init.gradle \
+            _copyDepsForScan 2>/dev/null || \
+          $GRADLEW --no-daemon \
+            --init-script /tmp/copy-deps.init.gradle \
+            :_copyDepsForScan 2>/dev/null || true
+
+          JAR_COUNT=$(find .dep-jars -maxdepth 1 -name '*.jar' | wc -l | tr -d ' ')
+          echo "jar_count=$JAR_COUNT" >> "$GITHUB_OUTPUT"
+          echo "Collected $JAR_COUNT runtime JARs into .dep-jars/"
+
+      - name: Resolve scan target
+        id: scan-target
+        run: |
+          JAR_COUNT="${{ steps.collect-deps.outputs.jar_count }}"
+          if [ "${JAR_COUNT:-0}" -gt 0 ]; then
+            echo "ref=.dep-jars" >> "$GITHUB_OUTPUT"
+            echo "Scan target: .dep-jars (${JAR_COUNT} runtime JARs)"
+          else
+            echo "ref=." >> "$GITHUB_OUTPUT"
+            echo "::warning::No runtime JARs collected — falling back to source scan (results may be incomplete)"
+          fi
+
+      # Generate SBOM via syft (anchore/sbom-action).
+      # syft reads META-INF/maven/*/pom.properties from each JAR to extract
+      # precise GAV coordinates, correctly surfacing bundled libraries inside
+      # fat/shaded JARs (e.g. testsigma-java-sdk's embedded jackson-databind).
+      # This is more reliable than the Gradle CycloneDX plugin, which only
+      # sees declared dependencies and misses shaded transitive content.
+      - name: Generate Java SBOM (syft)
+        uses: anchore/sbom-action@v0
+        with:
+          path: ${{ steps.scan-target.outputs.ref }}
+          format: cyclonedx-json
+          output-file: sbom-java.cdx.json
+          artifact-name: sbom-java.cdx.json
+
+      - name: Install Grype
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Run Grype vulnerability scanner
+        run: |
+          echo "=== Grype vulnerability table ==="
+          grype "sbom:sbom-java.cdx.json" --output table
+
+          grype "sbom:sbom-java.cdx.json" --output sarif > grype-results.sarif
+
+      - name: Trivy Java scan (JSON)
+        uses: aquasecurity/trivy-action@0.34.2
+        with:
+          scan-type: sbom
+          scan-ref: sbom-java.cdx.json
+          format: json
+          output: trivy-java.json
+          severity: LOW,MEDIUM,HIGH,CRITICAL
+          exit-code: "0"
+
+      - name: Upload scan results as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grype-scan-results
+          path: |
+            grype-results.sarif
+            sbom-java.cdx.json
+            trivy-java.json

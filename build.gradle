@@ -30,16 +30,23 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.20'
     implementation 'org.seleniumhq.selenium:selenium-api:4.33.0'
     implementation 'io.appium:java-client:9.4.0'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.apache.maven.plugins:maven-toolchains-plugin:3.0.0'
-    implementation 'org.testng:testng:7.4.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'org.apache.maven.plugins:maven-toolchains-plugin:3.2.0'
+    implementation 'org.testng:testng:7.10.2'
     implementation 'org.seleniumhq.selenium:selenium-java:4.33.0'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'org.apache.maven:maven-core:3.9.9'
+        force 'org.codehaus.plexus:plexus-utils:3.5.1'
+    }
+}
+
 group = 'com.testsigma'
-version = '1.2.24.1_cloud'
+version = '1.2.25_cloud'
 description = 'testsigma-addon-archetype'
 java.sourceCompatibility = JavaVersion.VERSION_11
 
